@@ -1,0 +1,54 @@
+import random
+
+class Room:
+    def __init__(self, name, description, choices):
+        self.name = name
+        self.description = description
+        self.choices = choices
+
+    def display(self):
+        print(f"\n{self.name}")
+        print(self.description)
+        for i, choice in enumerate(self.choices, 1):
+            print(f"{i}. {choice}")
+
+class Game:
+    def __init__(self):
+        self.rooms = {}
+        self.current_room = None
+
+    def add_room(self, room):
+        self.rooms[room.name] = room
+
+    def start(self, start_room):
+        self.current_room = self.rooms[start_room]
+
+    def play(self):
+        while True:
+            self.current_room.display()
+            choice = input("Enter your choice: ").strip()
+            if choice.lower() == 'q':
+                print("Thanks for playing!")
+                break
+            elif choice.isdigit() and 1 <= int(choice) <= len(self.current_room.choices):
+                next_room_name = self.current_room.choices[int(choice) - 1][1]
+                self.current_room = self.rooms[next_room_name]
+            else:
+                print("Invalid choice. Please try again.")
+
+# Define rooms
+room1 = Room("Forest", "You are in a dense forest. You hear strange noises.", [("Go north", "Cave"), ("Go east", "River")])
+room2 = Room("Cave", "You enter a dark cave. It smells musty and damp.", [("Go west", "Forest"), ("Explore further", "Monster")])
+room3 = Room("River", "You reach a fast-flowing river. The water looks cold.", [("Go west", "Forest"), ("Swim across", "Game Over")])
+room4 = Room("Monster", "You encounter a fierce monster! It attacks you.", [("Fight", "Game Over"), ("Run away", "Forest")])
+
+# Create game and add rooms
+game = Game()
+game.add_room(room1)
+game.add_room(room2)
+game.add_room(room3)
+game.add_room(room4)
+
+# Start game
+game.start("Forest")
+game.play()
